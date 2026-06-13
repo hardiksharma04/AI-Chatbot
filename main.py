@@ -1,8 +1,10 @@
 import os
-import json
 from groq import Groq
 from dotenv import load_dotenv
+
 from tools import get_time, get_date, say_hello
+from memory import load_messages, save_messages, clear_messages
+from tool_selector import select_tool
 
 load_dotenv()
 
@@ -10,17 +12,15 @@ client = Groq(
     api_key=os.getenv("GROQ_API_KEY")
 )
 
-# Load chat history
-try:
-    with open("chat_history.json", "r") as file:
-        messages = json.load(file)
-except FileNotFoundError:
-    messages = [
-        {
-            "role": "system",
-            "content": "You are a helpful AI assistant."
-        }
-    ]
+# Load previous chat history
+messages = load_messages()
+
+# Available tools
+tools = {
+    "get_time": get_time,
+    "get_date": get_date,
+    "say_hello": say_hello
+}
 
 print("AI Chatbot Started")
 print("Type '/help' for commands\n")
@@ -55,35 +55,73 @@ Available Commands:
 
     # Clear command
     if user_input.lower() == "/clear":
-        messages = [
-            {
-                "role": "system",
-                "content": "You are a helpful AI assistant."
-            }
-        ]
-
-        with open("chat_history.json", "w") as file:
-            json.dump(messages, file, indent=4)
-
+        messages = clear_messages()
         print("Chat history cleared.")
         continue
 
-    # Hello command
+    # Manual commands
     if user_input.lower() == "/hello":
-        print(say_hello())
+        print("Bot:", say_hello())
         continue
 
-    # Time command
     if user_input.lower() == "/time":
-        print("Current Time:", get_time())
+        print("Bot:", get_time())
         continue
 
-    # Date command
     if user_input.lower() == "/date":
-        print("Today's Date:", get_date())
+        print("Bot:", get_date())
         continue
 
-    # Add user message
+    # -----------------------
+    # AI Tool Calling
+    # -----------------------
+
+    tool_name = select_tool(client, user_input)
+
+    if tool_name in tools:
+        result = tools[tool_name]()
+
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {
+                    "role": "system",
+                    "content": f"Tool result: {result}"
+                },
+                {
+                    "role": "user",
+                    "content": user_input
+                }
+            ]
+        )
+
+        bot_reply = response.choices[0].message.content
+
+        print("Bot:", bot_reply)
+        print()
+
+        messages.append(
+            {
+                "role": "user",
+                "content": user_input
+            }
+        )
+
+        messages.append(
+            {
+                "role": "assistant",
+                "content": bot_reply
+            }
+        )
+
+        save_messages(messages)
+
+        continue
+
+    # -----------------------
+    # Normal Chat
+    # -----------------------
+
     messages.append(
         {
             "role": "user",
@@ -91,7 +129,6 @@ Available Commands:
         }
     )
 
-    # Send conversation history
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=messages
@@ -102,7 +139,6 @@ Available Commands:
     print("Bot:", bot_reply)
     print()
 
-    # Save assistant reply
     messages.append(
         {
             "role": "assistant",
@@ -110,6 +146,4 @@ Available Commands:
         }
     )
 
-    # Save chat history
-    with open("chat_history.json", "w") as file:
-        json.dump(messages, file, indent=4)
+    save_messages(messages)
