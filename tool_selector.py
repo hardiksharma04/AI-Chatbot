@@ -7,6 +7,7 @@ Available tools:
 - get_time
 - get_date
 - say_hello
+- calculate
 
 User: {user_input}
 
@@ -14,6 +15,7 @@ Reply with ONLY one of:
 get_time
 get_date
 say_hello
+calculate
 none
 """
 

@@ -2,7 +2,7 @@ import os
 from groq import Groq
 from dotenv import load_dotenv
 
-from tools import get_time, get_date, say_hello
+from tools import get_time, get_date, say_hello, calculate
 from memory import load_messages, save_messages, clear_messages
 from tool_selector import select_tool
 
@@ -19,7 +19,8 @@ messages = load_messages()
 tools = {
     "get_time": get_time,
     "get_date": get_date,
-    "say_hello": say_hello
+    "say_hello": say_hello,
+    "calculate": calculate
 }
 
 print("AI Chatbot Started")
@@ -78,6 +79,15 @@ Available Commands:
 
     tool_name = select_tool(client, user_input)
 
+    # Calculator Tool
+    if tool_name == "calculate":
+        expression = user_input.replace("calculate", "").strip()
+        result = calculate(expression)
+        print("Bot:", result)
+        print()
+        continue  
+
+    # Other Tools
     if tool_name in tools:
         result = tools[tool_name]()
 

@@ -8,3 +8,9 @@ def get_date():
 
 def say_hello():
     return "Hello Hardik! 👋 Welcome back."
+
+def calculate(expression):
+    try:
+        return str(eval(expression))
+    except:
+        return "Invalid calculation."
