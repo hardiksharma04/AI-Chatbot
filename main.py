@@ -2,7 +2,7 @@ import os
 from groq import Groq
 from dotenv import load_dotenv
 
-from tools import get_time, get_date, say_hello, calculate, save_note, show_notes, add_task, show_tasks, delete_task
+from tools import get_time, get_date, say_hello, calculate, save_note, show_notes, add_task, show_tasks, delete_task, get_weather
 from memory import load_messages, save_messages, clear_messages
 from tool_selector import select_tool
 
@@ -25,7 +25,8 @@ tools = {
     "show_notes": show_notes,
     "add_task": add_task,
     "show_tasks": show_tasks,
-    "delete_task": delete_task
+    "delete_task": delete_task,
+    "get_weather": get_weather
 }
 
 print("AI Chatbot Started")
@@ -131,6 +132,14 @@ Available Commands:
     if tool_name == "delete_task":
         task_number = user_input.replace("delete task", "").strip()
         result = delete_task(task_number)
+        print("Bot:", result)
+        print()
+        continue
+
+# Get Weather
+    if tool_name == "get_weather":
+        city = user_input.replace("weather in", "").strip()
+        result = get_weather(city)
         print("Bot:", result)
         print()
         continue

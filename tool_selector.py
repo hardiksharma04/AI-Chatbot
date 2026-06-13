@@ -13,6 +13,7 @@ Available tools:
 - add_task
 - show_tasks
 - delete_task
+- get_weather
 
 User: {user_input}
 
@@ -26,6 +27,7 @@ show_notes
 add_task
 show_tasks
 delete_task
+get_weather
 none
 """
 

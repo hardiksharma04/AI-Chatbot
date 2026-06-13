@@ -1,4 +1,6 @@
 from datetime import datetime, date
+import requests
+import os
 
 def get_time():
     return datetime.now().strftime("%I:%M %p")
@@ -85,3 +87,27 @@ def delete_task(task_number):
 
     except:
         return "Invalid task number."
+    
+def get_weather(city):
+
+    api_key = os.getenv("WEATHER_API_KEY")
+
+    url = (
+        f"https://api.openweathermap.org/data/2.5/weather"
+        f"?q={city}&appid={api_key}&units=metric"
+    )
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+
+        if response.status_code != 200:
+            return "City not found."
+
+        temp = data["main"]["temp"]
+        condition = data["weather"][0]["description"]
+
+        return f"{city}: {temp}°C, {condition}"
+
+    except Exception as e:
+        return f"Error: {e}"
