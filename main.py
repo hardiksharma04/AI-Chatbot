@@ -2,7 +2,7 @@ import os
 from groq import Groq
 from dotenv import load_dotenv
 
-from tools import get_time, get_date, say_hello, calculate
+from tools import get_time, get_date, say_hello, calculate, save_note, show_notes, add_task, show_tasks, delete_task
 from memory import load_messages, save_messages, clear_messages
 from tool_selector import select_tool
 
@@ -20,7 +20,12 @@ tools = {
     "get_time": get_time,
     "get_date": get_date,
     "say_hello": say_hello,
-    "calculate": calculate
+    "calculate": calculate,
+    "save_note": save_note,
+    "show_notes": show_notes,
+    "add_task": add_task,
+    "show_tasks": show_tasks,
+    "delete_task": delete_task
 }
 
 print("AI Chatbot Started")
@@ -86,7 +91,50 @@ Available Commands:
         print("Bot:", result)
         print()
         continue  
+    
+    # Save Note Tool
+    if tool_name == "save_note":
+        note = user_input.replace("note that", "").strip()
+        result = save_note(note)
+        print("Bot:", result)
+        print()
+        continue
 
+
+# Show Notes Tool
+    if tool_name == "show_notes":
+        result = show_notes()
+        print("Bot:")
+        print(result)
+        print()
+        continue
+
+# Add Task
+    if tool_name == "add_task":
+        task = user_input.replace("add task", "").strip()
+        result = add_task(task)
+        print("Bot:", result)
+        print()
+        continue
+
+
+# Show Tasks
+    if tool_name == "show_tasks":
+        result = show_tasks()
+        print("Bot:")
+        print(result)
+        print()
+        continue
+
+
+# Delete Task
+    if tool_name == "delete_task":
+        task_number = user_input.replace("delete task", "").strip()
+        result = delete_task(task_number)
+        print("Bot:", result)
+        print()
+        continue
+    
     # Other Tools
     if tool_name in tools:
         result = tools[tool_name]()

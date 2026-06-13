@@ -8,6 +8,11 @@ Available tools:
 - get_date
 - say_hello
 - calculate
+- save_note
+-show_notes
+- add_task
+- show_tasks
+- delete_task
 
 User: {user_input}
 
@@ -16,6 +21,11 @@ get_time
 get_date
 say_hello
 calculate
+save_note
+show_notes
+add_task
+show_tasks
+delete_task
 none
 """
 

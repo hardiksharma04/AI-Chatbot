@@ -170,5 +170,13 @@
     {
         "role": "assistant",
         "content": "It seems like you're keeping it short again, Hardik. If you're ready to talk or need help with something, I'm here to listen and assist. Otherwise, I can suggest some conversation topics or play a game with you. What sounds interesting to you?"
+    },
+    {
+        "role": "user",
+        "content": "ezit"
+    },
+    {
+        "role": "assistant",
+        "content": "It seems like you might have typed that quickly or it's shorthand for something. Could you please explain or provide more context about what \"ezit\" means or what you're trying to communicate? I'm here to help with any questions or topics you'd like to discuss."
     }
 ]
